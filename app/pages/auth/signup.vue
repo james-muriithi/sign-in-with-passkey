@@ -65,11 +65,13 @@
               autocomplete="new-password"
             />
 
-            <button
-              class="mt-2 inline-flex items-center justify-center rounded-xl bg-primary px-4 py-3 text-sm font-semibold text-base transition hover:-translate-y-0.5 cursor-pointer"
+            <AppButton
+              type="submit"
+              full-width
+              class="mt-2"
             >
               Create account
-            </button>
+            </AppButton>
           </form>
         </div>
       </div>

@@ -70,12 +70,13 @@
               </NuxtLink>
             </div>
 
-            <button
+            <AppButton
               type="submit"
-              class="mt-2 inline-flex items-center justify-center rounded-xl bg-primary px-4 py-3 text-sm font-semibold text-base transition hover:-translate-y-0.5 cursor-pointer"
+              full-width
+              class="mt-2"
             >
               Sign in
-            </button>
+            </AppButton>
 
             <div
               class="flex items-center gap-3 text-[11px] uppercase tracking-[0.3em] text-muted/80 my-3"
@@ -85,14 +86,19 @@
               <span class="h-px flex-1 bg-ink/10" />
             </div>
 
-            <button
+            <AppButton
               type="button"
-              class="inline-flex items-center justify-center gap-3 rounded-xl border border-ink/10 bg-panel/70 px-4 py-3 text-sm font-semibold text-ink transition hover:-translate-y-0.5 hover:border-primary/30 hover:bg-panel"
+              variant="secondary"
+              full-width
             >
-              <span class="h-2.5 w-2.5 rounded-full bg-primary" />
+              <template #leading>
+                <span class="h-2.5 w-2.5 rounded-full bg-primary" />
+              </template>
               Continue with passkey
-              <Icon name="boxicons:key" class="text-lg" />
-            </button>
+              <template #trailing>
+                <Icon name="boxicons:key" class="text-lg" />
+              </template>
+            </AppButton>
           </form>
         </div>
       </div>
