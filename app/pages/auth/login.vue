@@ -74,6 +74,7 @@
               type="submit"
               full-width
               class="mt-2"
+              :disabled="v$.$invalid"
             >
               Sign in
             </AppButton>
@@ -86,11 +87,7 @@
               <span class="h-px flex-1 bg-ink/10" />
             </div>
 
-            <AppButton
-              type="button"
-              variant="secondary"
-              full-width
-            >
+            <AppButton type="button" variant="secondary" full-width>
               <template #leading>
                 <span class="h-2.5 w-2.5 rounded-full bg-primary" />
               </template>
@@ -114,6 +111,8 @@
 </template>
 
 <script setup lang="ts">
+import useVuelidate from "@vuelidate/core";
+import { email, required } from "@vuelidate/validators";
 import { reactive } from "vue";
 
 const form = reactive({
@@ -121,6 +120,13 @@ const form = reactive({
   password: "",
   remember: false,
 });
+
+const rules = {
+  email: { required, email },
+  password: { required },
+};
+
+const v$ = useVuelidate(rules, form);
 
 definePageMeta({
   layout: "auth",
