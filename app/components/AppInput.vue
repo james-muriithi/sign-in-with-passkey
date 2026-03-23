@@ -3,7 +3,7 @@
     <label
       v-if="label"
       :for="id"
-      class="text-xs uppercase tracking-[0.2em] text-white/50"
+      class="text-xs uppercase tracking-[0.2em] text-muted/90"
     >
       {{ label }}
     </label>
@@ -17,7 +17,7 @@
       class="w-full rounded-xl border border-primary/10 bg-panel/60 px-4 py-3 text-sm text-primary placeholder:text-muted/70 focus:border-accent/60 focus:outline-none focus:ring-2 focus:ring-accent/20"
       @input="onInput"
     />
-    <p v-if="hint" class="text-xs text-white/40">
+    <p v-if="hint" class="text-xs text-muted/80">
       {{ hint }}
     </p>
   </div>
@@ -35,7 +35,7 @@ type InputProps = {
   hint?: string;
 };
 
-const props = withDefaults(defineProps<InputProps>(), {
+withDefaults(defineProps<InputProps>(), {
   type: "text",
   autocomplete: "off",
 });
