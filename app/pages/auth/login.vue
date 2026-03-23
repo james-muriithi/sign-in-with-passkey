@@ -80,6 +80,7 @@
             </AppButton>
 
             <div
+              v-if="isPasskeySupported"
               class="flex items-center gap-3 text-[11px] uppercase tracking-[0.3em] text-muted/80 my-3"
             >
               <span class="h-px flex-1 bg-ink/10" />
@@ -87,15 +88,7 @@
               <span class="h-px flex-1 bg-ink/10" />
             </div>
 
-            <AppButton type="button" variant="secondary" full-width>
-              <template #leading>
-                <span class="h-2.5 w-2.5 rounded-full bg-primary" />
-              </template>
-              Continue with passkey
-              <template #trailing>
-                <Icon name="boxicons:key" class="text-lg" />
-              </template>
-            </AppButton>
+            <PasskeyLoginButton v-if="isPasskeySupported" />
           </form>
         </div>
       </div>
@@ -120,6 +113,8 @@ const form = reactive({
   password: "",
   remember: false,
 });
+
+const { isPasskeySupported } = useBrowser();
 
 const rules = {
   email: { required, email },
