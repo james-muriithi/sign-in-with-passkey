@@ -19,7 +19,7 @@
         </p>
       </div>
       <div
-        class="fade-up delay-2 rounded-3xl border border-ink/10 bg-ink/5 p-8 shadow-2xl shadow-base/70 backdrop-blur"
+        class="fade-up delay-2 rounded-2xl border border-ink/10 bg-ink/5 p-4 lg:p-8 shadow-2xl shadow-base/70 backdrop-blur"
       >
         <div class="space-y-2">
           <h2 class="text-2xl font-semibold">Create your CodeBase account</h2>

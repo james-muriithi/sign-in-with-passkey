@@ -21,7 +21,7 @@
       </div>
 
       <div
-        class="fade-up delay-2 mt-8 rounded-[2rem] border border-ink/10 bg-ink/5 p-8 shadow-2xl shadow-base/60 backdrop-blur-sm"
+        class="fade-up delay-2 mt-8 rounded-2xl border border-ink/10 bg-ink/5 p-4 lg:p-8 shadow-2xl shadow-base/60 backdrop-blur-sm"
       >
         <div class="space-y-2">
           <h2 class="text-2xl font-semibold">Sign in to CodeBase</h2>
