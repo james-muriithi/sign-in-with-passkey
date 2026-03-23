@@ -1,0 +1,37 @@
+@import "tailwindcss";
+@import url("https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap");
+/* @import "@nuxt/ui"; */
+
+@theme {
+  --color-base: rgb(var(--cb-bg));
+  --color-surface: rgb(var(--cb-surface));
+  --color-panel: rgb(var(--cb-panel));
+  --color-primary: rgb(var(--cb-text));
+  --color-muted: rgb(var(--cb-muted));
+  --color-accent: rgb(var(--cb-accent));
+  --color-accent-2: rgb(var(--cb-accent-2));
+  --color-glow: rgb(var(--cb-glow));
+  --font-sans: "Space Grotesk", system-ui, sans-serif;
+  --font-display: "Fraunces", serif;
+}
+
+@layer base {
+  :root {
+    /* --cb-bg: 245 245 245; */
+    --cb-bg: 2 6 24;
+    --cb-surface: 15 23 42;
+    --cb-panel: 20 30 50;
+    --cb-text: 248 250 252;
+    --cb-muted: 148 163 184;
+    --cb-accent: 103 232 249;
+    --cb-accent-2: 110 231 183;
+    --cb-glow: 236 72 153;
+    --cb-font-sans: "Space Grotesk";
+    --cb-font-display: "Fraunces";
+  }
+
+  body {
+    @apply bg-base text-primary;
+    font-family: var(--cb-font-sans), system-ui, sans-serif;
+  }
+}
