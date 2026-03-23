@@ -58,7 +58,7 @@
                   v-model="form.remember"
                   type="checkbox"
                   class="h-4 w-4 rounded border border-ink/20 bg-panel text-primary focus:ring-primary/30"
-                />
+                >
                 Remember this device
               </label>
 
