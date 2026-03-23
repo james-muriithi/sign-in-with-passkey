@@ -2,10 +2,10 @@
   <div class="w-full flex justify-center">
     <section >
       <div
-        class="fade-up delay-1 inline-flex items-center gap-2 rounded-full border border-primary/15 bg-primary/5 px-4 py-1 text-[11px] uppercase tracking-[0.35em] text-primary/70"
+        class="fade-up delay-1 inline-flex items-center gap-2 rounded-full border border-ink/15 bg-ink/5 px-4 py-1 text-[11px] uppercase tracking-[0.35em] text-ink/70"
       >
-        <span class="h-1.5 w-1.5 rounded-full bg-accent-2" />
-        CodeBase s
+        <span class="h-1.5 w-1.5 rounded-full bg-secondary" />
+        CodeBase Login
       </div>
 
       <div class="mt-6 max-w-xl">
@@ -14,18 +14,18 @@
         >
           Welcome back to your hosting control room.
         </h1>
-        <p class="fade-up delay-3 mt-4 max-w-lg text-base text-primary/70">
+        <p class="fade-up delay-3 mt-4 max-w-lg text-base text-ink/70">
           Sign in to review deploys, inspect logs, and keep your infrastructure
           moving without surprises.
         </p>
       </div>
 
       <div
-        class="fade-up delay-4 mt-8 rounded-[2rem] border border-primary/10 bg-primary/5 p-8 shadow-2xl shadow-base/60 backdrop-blur-sm"
+        class="fade-up delay-2 mt-8 rounded-[2rem] border border-ink/10 bg-ink/5 p-8 shadow-2xl shadow-base/60 backdrop-blur-sm"
       >
         <div class="space-y-2">
           <h2 class="text-2xl font-semibold">Sign in to CodeBase</h2>
-          <p class="text-sm text-primary/60">
+          <p class="text-sm text-ink/60">
             Pick up where your last deploy left off.
           </p>
         </div>
@@ -33,18 +33,18 @@
         <div class="mt-6 grid gap-4">
           <button
             type="button"
-            class="inline-flex items-center justify-center gap-3 rounded-xl border border-primary/10 bg-panel/70 px-4 py-3 text-sm font-semibold text-primary transition hover:-translate-y-0.5 hover:border-accent/30 hover:bg-panel"
+            class="inline-flex items-center justify-center gap-3 rounded-xl border border-ink/10 bg-panel/70 px-4 py-3 text-sm font-semibold text-ink transition hover:-translate-y-0.5 hover:border-primary/30 hover:bg-panel"
           >
-            <span class="h-2.5 w-2.5 rounded-full bg-accent" />
+            <span class="h-2.5 w-2.5 rounded-full bg-primary" />
             Continue with GitHub
           </button>
 
           <div
             class="flex items-center gap-3 text-[11px] uppercase tracking-[0.3em] text-muted/80"
           >
-            <span class="h-px flex-1 bg-primary/10" />
+            <span class="h-px flex-1 bg-ink/10" />
             Or
-            <span class="h-px flex-1 bg-primary/10" />
+            <span class="h-px flex-1 bg-ink/10" />
           </div>
 
           <form class="grid gap-4">
@@ -67,20 +67,20 @@
             />
 
             <div
-              class="flex flex-col gap-3 text-sm text-primary/70 sm:flex-row sm:items-center sm:justify-between"
+              class="flex flex-col gap-3 text-sm text-ink/70 sm:flex-row sm:items-center sm:justify-between"
             >
               <label class="inline-flex items-center gap-3">
                 <input
                   v-model="form.remember"
                   type="checkbox"
-                  class="h-4 w-4 rounded border border-primary/20 bg-panel text-accent focus:ring-accent/30"
+                  class="h-4 w-4 rounded border border-ink/20 bg-panel text-primary focus:ring-primary/30"
                 />
                 Remember this device
               </label>
 
               <NuxtLink
                 to="/auth/signup"
-                class="text-sm text-accent underline decoration-accent/40 underline-offset-4"
+                class="text-sm text-primary underline decoration-primary/40 underline-offset-4"
               >
                 Need an account?
               </NuxtLink>
@@ -88,7 +88,7 @@
 
             <button
               type="submit"
-              class="mt-2 inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-accent/90 via-accent-2/90 to-teal-200/90 px-4 py-3 text-sm font-semibold text-base transition hover:-translate-y-0.5"
+              class="mt-2 inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-primary/90 via-secondary/90 to-brand-100/90 px-4 py-3 text-sm font-semibold text-base transition hover:-translate-y-0.5 cursor-pointer"
             >
               Sign in
             </button>
@@ -98,7 +98,7 @@
 
       <p class="mt-6 text-sm text-muted/80">
         Trouble signing in?
-        <a href="#" class="text-primary underline underline-offset-4"
+        <a href="#" class="text-ink underline underline-offset-4"
           >Reset your password</a
         >
       </p>
