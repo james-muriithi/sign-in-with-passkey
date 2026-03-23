@@ -1,6 +1,6 @@
 <template>
   <div class="w-full flex justify-center">
-    <section >
+    <section>
       <div
         class="fade-up delay-1 inline-flex items-center gap-2 rounded-full border border-ink/15 bg-ink/5 px-4 py-1 text-[11px] uppercase tracking-[0.35em] text-ink/70"
       >
@@ -31,22 +31,6 @@
         </div>
 
         <div class="mt-6 grid gap-4">
-          <button
-            type="button"
-            class="inline-flex items-center justify-center gap-3 rounded-xl border border-ink/10 bg-panel/70 px-4 py-3 text-sm font-semibold text-ink transition hover:-translate-y-0.5 hover:border-primary/30 hover:bg-panel"
-          >
-            <span class="h-2.5 w-2.5 rounded-full bg-primary" />
-            Continue with GitHub
-          </button>
-
-          <div
-            class="flex items-center gap-3 text-[11px] uppercase tracking-[0.3em] text-muted/80"
-          >
-            <span class="h-px flex-1 bg-ink/10" />
-            Or
-            <span class="h-px flex-1 bg-ink/10" />
-          </div>
-
           <form class="grid gap-4">
             <AppInput
               id="email"
@@ -88,9 +72,26 @@
 
             <button
               type="submit"
-              class="mt-2 inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-primary/90 via-secondary/90 to-brand-100/90 px-4 py-3 text-sm font-semibold text-base transition hover:-translate-y-0.5 cursor-pointer"
+              class="mt-2 inline-flex items-center justify-center rounded-xl bg-primary px-4 py-3 text-sm font-semibold text-base transition hover:-translate-y-0.5 cursor-pointer"
             >
               Sign in
+            </button>
+
+            <div
+              class="flex items-center gap-3 text-[11px] uppercase tracking-[0.3em] text-muted/80 my-3"
+            >
+              <span class="h-px flex-1 bg-ink/10" />
+              Or
+              <span class="h-px flex-1 bg-ink/10" />
+            </div>
+
+            <button
+              type="button"
+              class="inline-flex items-center justify-center gap-3 rounded-xl border border-ink/10 bg-panel/70 px-4 py-3 text-sm font-semibold text-ink transition hover:-translate-y-0.5 hover:border-primary/30 hover:bg-panel"
+            >
+              <span class="h-2.5 w-2.5 rounded-full bg-primary" />
+              Continue with passkey
+              <Icon name="boxicons:key" class="text-lg" />
             </button>
           </form>
         </div>

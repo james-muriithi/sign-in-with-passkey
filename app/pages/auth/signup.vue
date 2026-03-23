@@ -29,23 +29,6 @@
         </div>
 
         <div class="mt-6 grid gap-4">
-          <button
-            type="button"
-            class="group inline-flex items-center justify-center gap-3 rounded-xl bg-ink px-4 py-3 text-sm font-semibold text-base transition hover:-translate-y-0.5 hover:bg-ink/90"
-          >
-            <span class="h-2.5 w-2.5 rounded-full bg-primary" />
-            Continue with GitHub
-            <Icon name="mdi:github" />
-          </button>
-
-          <div
-            class="flex items-center gap-3 text-[11px] uppercase tracking-[0.3em] text-muted/80"
-          >
-            <span class="h-px flex-1 bg-ink/10" />
-            Or
-            <span class="h-px flex-1 bg-ink/10" />
-          </div>
-
           <form class="grid gap-4">
             <AppInput
               id="name"
@@ -83,7 +66,7 @@
             />
 
             <button
-              class="mt-2 inline-flex items-center justify-center rounded-xl bg-linear-to-r from-primary/90 via-secondary/90 to-brand-100/90 px-4 py-3 text-sm font-semibold text-base transition hover:-translate-y-0.5 cursor-pointer"
+              class="mt-2 inline-flex items-center justify-center rounded-xl bg-primary px-4 py-3 text-sm font-semibold text-base transition hover:-translate-y-0.5 cursor-pointer"
             >
               Create account
             </button>
