@@ -1,6 +1,6 @@
 import { useAuthStore } from "~/store/auth";
 
-export default defineNuxtRouteMiddleware((to, from) => {
+export default defineNuxtRouteMiddleware((to) => {
   if (to.matched.length === 0 || to.meta.auth === false) {
     return;
   }
