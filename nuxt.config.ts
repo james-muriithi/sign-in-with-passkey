@@ -4,6 +4,13 @@ import tailwindcss from "@tailwindcss/vite";
 
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
+  runtimeConfig: {
+    webauthn: {
+        rpName: process.env.WEBAUTHN_RP_NAME ?? 'My App',
+        rpId: process.env.WEBAUTHN_RP_ID ?? 'localhost',
+        origin: process.env.WEBAUTHN_ORIGIN ?? 'http://localhost:3000',
+    }
+  },
   devtools: { enabled: true },
   modules: ['@nuxt/eslint', '@nuxt/icon', '@pinia/nuxt'],
   css: ['~/assets/css/tailwind.css'],
