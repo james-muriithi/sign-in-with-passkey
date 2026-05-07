@@ -15,7 +15,8 @@
           Create your CodeBase workspace and go live fast.
         </h1>
         <p class="fade-up delay-3 mt-4 max-w-lg text-base text-ink/70">
-          Spin up your team, connect your repo, and ship production-ready apps from one clean dashboard.
+          Spin up your team, connect your repo, and ship production-ready apps
+          from one clean dashboard.
         </p>
       </div>
       <div
@@ -29,13 +30,24 @@
         </div>
 
         <div class="mt-6 grid gap-4">
-          <form class="grid gap-4">
+          <!-- Step 1: signup form -->
+          <form
+            v-if="step === 'form'"
+            class="grid gap-4"
+            @submit.prevent="submitSignup"
+          >
             <AppInput
               id="name"
               v-model="form.name"
               label="Full name"
               placeholder="Alex Morgan"
               autocomplete="name"
+              :error="
+                v$.name.$dirty && v$.name.$error
+                  ? String(v$.name.$errors[0]?.$message)
+                  : undefined
+              "
+              @blur="v$.name.$touch()"
             />
 
             <AppInput
@@ -45,6 +57,12 @@
               type="email"
               placeholder="alex@studio.com"
               autocomplete="email"
+              :error="
+                v$.email.$dirty && v$.email.$error
+                  ? String(v$.email.$errors[0]?.$message)
+                  : undefined
+              "
+              @blur="v$.email.$touch()"
             />
 
             <AppInput
@@ -55,24 +73,73 @@
               placeholder="••••••••"
               autocomplete="new-password"
               hint="Use 8+ characters with a mix of letters and numbers."
+              :error="
+                v$.password.$dirty && v$.password.$error
+                  ? String(v$.password.$errors[0]?.$message)
+                  : undefined
+              "
+              @blur="v$.password.$touch()"
             />
 
             <AppInput
               id="repeat-password"
+              v-model="form.repeatPassword"
               label="Repeat password"
               type="password"
               placeholder="••••••••"
               autocomplete="new-password"
+              :error="
+                v$.repeatPassword.$dirty && v$.repeatPassword.$error
+                  ? String(v$.repeatPassword.$errors[0]?.$message)
+                  : undefined
+              "
+              @blur="v$.repeatPassword.$touch()"
             />
+
+            <p v-if="error" class="text-sm text-red-500">
+              {{ error }}
+            </p>
 
             <AppButton
               type="submit"
               full-width
               class="mt-2"
+              :loading="loading"
+              loading-text="Creating account…"
+              :disabled="v$.$invalid"
             >
               Create account
             </AppButton>
           </form>
+
+          <!-- Step 2: passkey setup prompt -->
+          <div v-else class="grid gap-4">
+            <div class="flex flex-col items-center gap-2 py-2 text-center">
+              <Icon name="boxicons:key" class="text-4xl text-primary" />
+              <h3 class="text-lg font-semibold">Set up a passkey</h3>
+              <p class="text-sm text-ink/60">
+                Sign in faster with Touch ID, Face ID, or a security key. You
+                can always do this later from your account settings.
+              </p>
+            </div>
+
+            <p v-if="error" class="text-sm text-red-500">
+              {{ error }}
+            </p>
+
+            <AppButton
+              full-width
+              :loading="loading"
+              loading-text="Setting up…"
+              @click="handleSetupPasskey"
+            >
+              Set up passkey
+            </AppButton>
+
+            <AppButton variant="ghost" full-width @click="skipPasskey">
+              Skip for now
+            </AppButton>
+          </div>
         </div>
       </div>
 
@@ -95,18 +162,78 @@
 </template>
 
 <script setup lang="ts">
-import { reactive } from "vue";
-
-const form = reactive({
-  name: "",
-  email: "",
-  company: "",
-  password: "",
-});
+import useVuelidate from "@vuelidate/core";
+import {
+  email,
+  helpers,
+  minLength,
+  required,
+  sameAs,
+} from "@vuelidate/validators";
 
 definePageMeta({
   layout: "auth",
 });
+
+const step = ref<"form" | "passkey">("form");
+
+const form = reactive({
+  name: "John Doe",
+  email: "johndoe@gmail.com",
+  password: "password",
+  repeatPassword: "password",
+});
+
+const rules = computed(() => ({
+  name: { required: helpers.withMessage("Name is required", required) },
+  email: {
+    required: helpers.withMessage("Email is required", required),
+    email: helpers.withMessage("Invalid email", email),
+  },
+  password: {
+    required: helpers.withMessage("Password is required", required),
+    minLength: helpers.withMessage(
+      "Password must be at least 8 characters",
+      minLength(8),
+    ),
+  },
+  repeatPassword: {
+    required: helpers.withMessage("Repeat password is required", required),
+    sameAsPassword: helpers.withMessage(
+      "Passwords do not match",
+      sameAs(form.password),
+    ),
+  },
+}));
+
+const v$ = useVuelidate(rules, form);
+const { signup, setupPasskey, loading, error } = useAuth();
+
+async function submitSignup() {
+  v$.value.$touch();
+  if (v$.value.$invalid) return;
+
+  try {
+    const { repeatPassword, ...signupData } = form;
+    await signup(signupData);
+    step.value = "passkey";
+  } catch {
+    /* error shown via composable */
+  }
+}
+
+async function handleSetupPasskey() {
+  try {
+    await setupPasskey();
+    await navigateTo("/");
+  } catch {
+    /* error shown via composable */
+  }
+}
+
+function skipPasskey() {
+  navigateTo("/");
+}
 </script>
 
 <style scoped>
