@@ -1,43 +1,71 @@
 import {
   verifyRegistrationResponse,
   type RegistrationResponseJSON,
-} from "@simplewebauthn/server";
-import fs from "fs";
-import z from "zod";
-import { useValidateBody } from '../../utils/validate';
-
-const CHALLENGES_FILE = "/tmp/passkey-challenges.json";
-
-const getChallenge = (email: string) => {
-  if (!fs.existsSync(CHALLENGES_FILE)) {
-    return null;
-  }
-  const challenges = JSON.parse(fs.readFileSync(CHALLENGES_FILE, "utf-8"));
-  return challenges[email] || null;
-};
+} from '@simplewebauthn/server'
+import z from 'zod'
+import { useValidateBody } from '../../utils/validate'
+import db from '../../utils/db'
 
 const verificationSchema = z.object({
-  email: z.string().email(),
   response: z.custom<RegistrationResponseJSON>(),
-});
+  passkeyName: z.string().min(1).optional(),
+})
 
 export default defineEventHandler(async (event) => {
-  const { email, response } = await useValidateBody(event, verificationSchema);
-  const challenge = getChallenge(email);
-  let verification;
+  const session = await useAuthentication(event)
+  const { response, passkeyName } = await useValidateBody(event, verificationSchema)
+
+  const challenge = await db.challenge.findFirst({
+    where: { userId: session.userId, type: 'registration' },
+  })
+
   if (!challenge) {
-    throw createError({ statusCode: 404, message: "Challenge not found" });
+    throw createError({ statusCode: 404, message: 'Challenge not found' })
   }
+
+  if (challenge.expiresAt < new Date()) {
+    await db.challenge.delete({ where: { id: challenge.id } })
+    throw createError({ statusCode: 400, message: 'Challenge expired' })
+  }
+
+  let verification
   try {
     verification = await verifyRegistrationResponse({
       response,
-      expectedChallenge: challenge,
+      expectedChallenge: challenge.challenge,
       expectedOrigin: useWebAuthnConfig().origin,
       expectedRPID: useWebAuthnConfig().rpID,
-    });
-  } catch (_) {
-    throw createError({ statusCode: 400, message: "Verification failed" });
+    })
   }
-  const { verified, registrationInfo } = verification;
-  return { verified, registrationInfo };
-});
+  catch {
+    throw createError({ statusCode: 400, message: 'Verification failed' })
+  }
+
+  const { verified, registrationInfo } = verification
+
+  if (!verified || !registrationInfo) {
+    throw createError({ statusCode: 400, message: 'Verification failed' })
+  }
+
+  const { credential, credentialDeviceType, credentialBackedUp } = registrationInfo
+
+  // Delete the used challenge and save the new passkey atomically
+  await db.$transaction([
+    db.challenge.delete({ where: { id: challenge.id } }),
+    db.passkey.create({
+      data: {
+        userId: session.userId,
+        credentialId: credential.id,
+        publicKey: Buffer.from(credential.publicKey),
+        counter: credential.counter,
+        deviceType: credentialDeviceType,
+        backedUp: credentialBackedUp,
+        transports: credential.transports ?? [],
+        name: passkeyName ?? null,
+      },
+    }),
+  ])
+
+  return { verified: verification.verified }
+})
+
