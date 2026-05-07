@@ -38,3 +38,11 @@ export const clearAuthSession = async (event: H3Event) => {
   const session = await useAuthSession(event)
   await session.clear()
 }
+
+export const useAuthentication = async (event: H3Event): Promise<SessionData> => {
+  const session = await getAuthSession(event)
+  if (!session) {
+    throw createError({ statusCode: 401, message: 'Unauthorized' })
+  }
+  return session
+}
