@@ -1,34 +1,52 @@
-import { generateRegistrationOptions } from "@simplewebauthn/server";
-import fs from "fs";
+import { generateRegistrationOptions } from '@simplewebauthn/server'
+import type { AuthenticatorTransportFuture } from '@simplewebauthn/server'
+import db from '../../utils/db'
 
-const CHALLENGES_FILE = "/tmp/passkey-challenges.json";
-
-const saveChallenge = (challenge: string, email: string) => {
-  // save to a json file for now, but you should save this to a database associated with the user
-  let challenges: Record<string, string> = {};
-  if (fs.existsSync(CHALLENGES_FILE)) {
-    challenges = JSON.parse(fs.readFileSync(CHALLENGES_FILE, "utf-8"));
-  }
-  challenges[email] = challenge;
-  fs.writeFileSync(CHALLENGES_FILE, JSON.stringify(challenges), "utf-8");
-};
+const CHALLENGE_TTL_MS = 5 * 60 * 1000 // 5 minutes
 
 export default defineEventHandler(async (event) => {
-  const { rpName, rpID } = useWebAuthnConfig();
+  const session = await useAuthentication(event)
+  const { rpName, rpID } = useWebAuthnConfig()
 
-  const user = {
-    id: "123456",
-    email: "johndoe@gmail.com",
-    name: "John Doe",
-  };
+  const user = await db.user.findUnique({
+    where: { id: session.userId },
+    select: {
+      id: true,
+      email: true,
+      name: true,
+      passkeys: { select: { credentialId: true, transports: true } },
+    },
+  })
+
+  if (!user) {
+    throw createError({ statusCode: 404, message: 'User not found' })
+  }
+
   const options = await generateRegistrationOptions({
     rpName,
     rpID,
     userName: user.email,
     userDisplayName: user.name,
-  });
+    // Prevent re-registering a device that's already enrolled
+    excludeCredentials: user.passkeys.map((key) => ({
+      id: key.credentialId,
+      transports: key.transports as AuthenticatorTransportFuture[],
+    })),
+  })
 
-  saveChallenge(options.challenge, user.email);
+  // Delete any existing unused registration challenges for this user
+  await db.challenge.deleteMany({
+    where: { userId: user.id, type: 'registration' },
+  })
 
-  return options;
-});
+  await db.challenge.create({
+    data: {
+      userId: user.id,
+      challenge: options.challenge,
+      type: 'registration',
+      expiresAt: new Date(Date.now() + CHALLENGE_TTL_MS),
+    },
+  })
+
+  return options
+})
