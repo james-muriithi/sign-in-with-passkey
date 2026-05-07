@@ -29,6 +29,7 @@
     "@tailwindcss/vite": "^4.2.1",
     "@vuelidate/core": "^2.0.3",
     "@vuelidate/validators": "^2.0.4",
+    "bcryptjs": "^3.0.3",
     "nuxt": "^4.3.1",
     "pg": "^8.20.0",
     "tailwindcss": "^4.2.1",
@@ -37,6 +38,7 @@
     "zod": "^4.4.3"
   },
   "devDependencies": {
+    "@types/bcryptjs": "^3.0.0",
     "@types/pg": "^8.20.0",
     "dotenv": "^17.4.2",
     "prisma": "^7.8.0",
