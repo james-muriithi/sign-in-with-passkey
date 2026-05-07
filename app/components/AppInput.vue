@@ -14,12 +14,16 @@
       :placeholder="placeholder"
       :autocomplete="autocomplete"
       :value="modelValue ?? ''"
-      class="w-full rounded-xl border border-ink/10 bg-panel/60 px-4 py-3 text-sm text-ink placeholder:text-muted/70 focus:border-primary/60 focus:outline-none focus:ring-2 focus:ring-primary/20"
+      :class="[
+        'w-full rounded-xl border bg-panel/60 px-4 py-3 text-sm text-ink placeholder:text-muted/70 focus:outline-none focus:ring-2',
+        error
+          ? 'border-red-500/60 focus:border-red-500/60 focus:ring-red-500/20'
+          : 'border-ink/10 focus:border-primary/60 focus:ring-primary/20',
+      ]"
       @input="onInput"
     >
-    <p v-if="hint" class="text-xs text-muted/80">
-      {{ hint }}
-    </p>
+    <p v-if="error" class="text-xs text-red-500">{{ error }}</p>
+    <p v-else-if="hint" class="text-xs text-muted/80">{{ hint }}</p>
   </div>
 </template>
 
@@ -33,6 +37,7 @@ type InputProps = {
   autocomplete?: string;
   modelValue?: string;
   hint?: string;
+  error?: string;
 };
 
 withDefaults(defineProps<InputProps>(), {
