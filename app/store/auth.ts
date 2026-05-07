@@ -1,17 +1,18 @@
-export const useAuthStore = defineStore("auth", () => {
-  const isAuthenticated = ref(false);
+import type { User } from "~/generated/prisma/client"
 
-  function login() {
-    isAuthenticated.value = true;
+type AuthUser = Pick<User, 'id' | 'email' | 'name'>
+
+export const useAuthStore = defineStore('auth', () => {
+  const user = ref<AuthUser | null>(null)
+  const isAuthenticated = computed(() => user.value !== null)
+
+  const setUser = (u: AuthUser) => {
+    user.value = u
   }
 
-  function logout() {
-    isAuthenticated.value = false;
+  const clearUser = () => {
+    user.value = null
   }
 
-  return {
-    isAuthenticated,
-    login,
-    logout,
-  };
-});
+  return { user, isAuthenticated, setUser, clearUser }
+})
