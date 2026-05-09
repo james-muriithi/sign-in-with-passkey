@@ -9,7 +9,7 @@ export default defineNuxtConfig({
     webauthn: {
       rpName: process.env.WEBAUTHN_RP_NAME ?? 'My App',
       rpId: process.env.WEBAUTHN_RP_ID ?? 'localhost',
-      origin: process.env.WEBAUTHN_ORIGIN ?? 'http://localhost:3000',
+      origin: process.env.WEBAUTHN_ORIGIN ?? (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000'),
     },
   },
   devtools: { enabled: true },
