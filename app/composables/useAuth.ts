@@ -8,6 +8,7 @@ export const useAuth = () => {
   const store = useAuthStore();
   const loading = ref(false);
   const error = ref<string | null>(null);
+  const toast = useToast();
 
   function clearError() {
     error.value = null;
@@ -73,10 +74,14 @@ export const useAuth = () => {
         body: { response, passkeyName },
       });
     } catch (e: unknown) {
-      console.error("Passkey setup failed", e);
-      error.value =
-        (e as { data?: { message?: string } })?.data?.message ??
-        "Passkey setup failed";
+      const errorMessage =
+        (e as { message?: string })?.message ?? "Passkey setup failed";
+      error.value = errorMessage;
+      toast.add({
+        title: "Passkey setup failed",
+        description: errorMessage,
+        color: "warning",
+      });
       throw e;
     } finally {
       loading.value = false;
@@ -98,9 +103,14 @@ export const useAuth = () => {
       });
       store.setUser(user);
     } catch (e: unknown) {
-      error.value =
-        (e as { data?: { message?: string } })?.data?.message ??
-        "Passkey authentication failed";
+      const errorMessage =
+        (e as { message?: string })?.message ?? "Passkey authentication failed";
+      error.value = errorMessage;
+      toast.add({
+        title: "Passkey authentication failed",
+        description: errorMessage,
+        color: "warning",
+      });
       throw e;
     } finally {
       loading.value = false;

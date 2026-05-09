@@ -85,6 +85,7 @@ export default defineEventHandler(async (event) => {
       id: passkey.user.id,
       email: passkey.user.email,
       name: passkey.user.name,
+      hasPasskeys: true,
     },
   }
 })
