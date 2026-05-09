@@ -3,6 +3,7 @@ import type { H3Event } from 'h3'
 interface SessionData {
   userId: string
   email: string
+  registrationChallenge?: string
 }
 
 const SESSION_NAME = 'auth'
@@ -36,7 +37,7 @@ export const getAuthSession = async (event: H3Event): Promise<SessionData | null
 
 export const clearAuthSession = async (event: H3Event) => {
   const session = await useAuthSession(event)
-  await session.clear()
+  await session?.clear()
 }
 
 export const useAuthentication = async (event: H3Event): Promise<SessionData> => {
