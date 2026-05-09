@@ -31,7 +31,7 @@
         </div>
 
         <div class="mt-6 grid gap-4">
-          <form class="grid gap-4">
+          <form class="grid gap-4" @submit.prevent="submitLogin">
             <AppInput
               id="email"
               v-model="form.email"
@@ -39,6 +39,12 @@
               type="email"
               placeholder="alex@codebase.dev"
               autocomplete="email"
+              :error="
+                v$.email.$dirty && v$.email.$error
+                  ? String(v$.email.$errors[0]?.$message)
+                  : undefined
+              "
+              @blur="v$.email.$touch()"
             />
 
             <AppInput
@@ -48,6 +54,12 @@
               type="password"
               placeholder="Enter your password"
               autocomplete="current-password"
+              :error="
+                v$.password.$dirty && v$.password.$error
+                  ? String(v$.password.$errors[0]?.$message)
+                  : undefined
+              "
+              @blur="v$.password.$touch()"
             />
 
             <div
@@ -70,25 +82,34 @@
               </NuxtLink>
             </div>
 
+            <p v-if="error" class="text-sm text-red-500">
+              {{ error }}
+            </p>
+
             <AppButton
               type="submit"
               full-width
               class="mt-2"
+              :loading="loading"
+              loading-text="Signing in…"
               :disabled="v$.$invalid"
             >
               Sign in
             </AppButton>
 
-            <div
-              v-if="isPasskeySupported"
-              class="flex items-center gap-3 text-[11px] uppercase tracking-[0.3em] text-muted/80 my-3"
-            >
-              <span class="h-px flex-1 bg-ink/10" />
-              Or
-              <span class="h-px flex-1 bg-ink/10" />
-            </div>
+            <ClientOnly>
+              <template v-if="isPasskeySupported">
+                <div
+                  class="flex items-center gap-3 text-[11px] uppercase tracking-[0.3em] text-muted/80 my-3"
+                >
+                  <span class="h-px flex-1 bg-ink/10" />
+                  Or
+                  <span class="h-px flex-1 bg-ink/10" />
+                </div>
 
-            <PasskeyLoginButton v-if="isPasskeySupported" />
+                <PasskeyLoginButton @success="navigateTo('/')" />
+              </template>
+            </ClientOnly>
           </form>
         </div>
       </div>
@@ -115,6 +136,7 @@ const form = reactive({
 });
 
 const { isPasskeySupported } = useBrowser();
+const { login, loading, error } = useAuth();
 
 const rules = {
   email: { required, email },
@@ -122,6 +144,17 @@ const rules = {
 };
 
 const v$ = useVuelidate(rules, form);
+
+async function submitLogin() {
+  v$.value.$touch();
+  if (v$.value.$invalid) return;
+  try {
+    await login(form.email, form.password);
+    await navigateTo("/");
+  } catch {
+    /* error shown via composable */
+  }
+}
 
 definePageMeta({
   layout: "auth",
