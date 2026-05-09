@@ -19,5 +19,4 @@ import { useAuthStore } from "~/store/auth";
 
 const { user, isAuthenticated } = useAuthStore();
 const { logout } = useAuth();
-console.log("User:", user);
 </script>
