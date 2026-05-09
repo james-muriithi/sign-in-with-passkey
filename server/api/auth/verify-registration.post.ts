@@ -15,24 +15,18 @@ export default defineEventHandler(async (event) => {
   const session = await useAuthentication(event)
   const { response, passkeyName } = await useValidateBody(event, verificationSchema)
 
-  const challenge = await db.challenge.findFirst({
-    where: { userId: session.userId, type: 'registration' },
-  })
+  const authSession = await useAuthSession(event)
+  const challenge = authSession.data.registrationChallenge
 
   if (!challenge) {
-    throw createError({ statusCode: 404, message: 'Challenge not found' })
-  }
-
-  if (challenge.expiresAt < new Date()) {
-    await db.challenge.delete({ where: { id: challenge.id } })
-    throw createError({ statusCode: 400, message: 'Challenge expired' })
+    throw createError({ statusCode: 400, message: 'No active registration challenge' })
   }
 
   let verification
   try {
     verification = await verifyRegistrationResponse({
       response,
-      expectedChallenge: challenge.challenge,
+      expectedChallenge: challenge,
       expectedOrigin: useWebAuthnConfig().origin,
       expectedRPID: useWebAuthnConfig().rpID,
     })
@@ -49,10 +43,10 @@ export default defineEventHandler(async (event) => {
 
   const { credential, credentialDeviceType, credentialBackedUp } = registrationInfo
 
-  // Delete the used challenge and save the new passkey atomically
-  await db.$transaction([
-    db.challenge.delete({ where: { id: challenge.id } }),
-    db.passkey.create({
+  // Clear the used challenge from the session
+  await authSession.update({ ...authSession.data, registrationChallenge: undefined })
+
+  await db.passkey.create({
       data: {
         userId: session.userId,
         credentialId: credential.id,
@@ -63,8 +57,7 @@ export default defineEventHandler(async (event) => {
         transports: credential.transports ?? [],
         name: passkeyName ?? null,
       },
-    }),
-  ])
+    })
 
   return { verified: verification.verified }
 })
