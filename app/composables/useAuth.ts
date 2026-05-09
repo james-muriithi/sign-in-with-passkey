@@ -1,6 +1,7 @@
 import {
   startRegistration,
   startAuthentication,
+  WebAuthnError,
 } from "@simplewebauthn/browser";
 import { useAuthStore } from "~/store/auth";
 
@@ -73,7 +74,13 @@ export const useAuth = () => {
         method: "POST",
         body: { response, passkeyName },
       });
+      toast.add({
+        title: "Passkey setup successful",
+        description: "Your passkey has been registered and can be used for login.",
+        color: "success",
+      });
     } catch (e: unknown) {
+      console.error("Passkey setup failed", e.code);
       const errorMessage =
         (e as { message?: string })?.message ?? "Passkey setup failed";
       error.value = errorMessage;
@@ -102,10 +109,13 @@ export const useAuth = () => {
         body: { response },
       });
       store.setUser(user);
-    } catch (e: unknown) {
-      const errorMessage =
-        (e as { message?: string })?.message ?? "Passkey authentication failed";
-      error.value = errorMessage;
+      toast.add({
+        title: "Passkey authentication successful",
+        description: "You have successfully logged in with your passkey.",
+        color: "success",
+      });
+    } catch {
+      const errorMessage = "Passkey authentication failed. Please try again or use email/password login.";
       toast.add({
         title: "Passkey authentication failed",
         description: errorMessage,
