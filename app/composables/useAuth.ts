@@ -66,7 +66,7 @@ export const useAuth = () => {
       const options = await $fetch("/api/auth/generate-registration-options", {
         method: "POST",
       });
-      
+
       const response = await startRegistration({ optionsJSON: options });
       await $fetch("/api/auth/verify-registration", {
         method: "POST",
@@ -82,21 +82,18 @@ export const useAuth = () => {
     }
   }
 
-  async function loginWithPasskey(email: string) {
+  async function loginWithPasskey() {
     clearError();
     loading.value = true;
     try {
       const options = await $fetch(
         "/api/auth/generate-authentication-options",
-        {
-          method: "POST",
-          body: { email },
-        },
+        { method: "POST" },
       );
       const response = await startAuthentication({ optionsJSON: options });
       const { user } = await $fetch("/api/auth/verify-authentication", {
         method: "POST",
-        body: { email, response },
+        body: { response },
       });
       store.setUser(user);
     } catch (e: unknown) {
