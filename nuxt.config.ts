@@ -16,7 +16,7 @@ export default defineNuxtConfig({
   nitro: {
     preset: 'vercel',
   },
-  modules: ['@nuxt/eslint', '@nuxt/icon', '@pinia/nuxt'],
+  modules: ['@nuxt/eslint', '@nuxt/icon', '@pinia/nuxt', '@nuxt/ui'],
   css: ['~/assets/css/tailwind.css'],
   app: {
     head: {
