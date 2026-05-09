@@ -13,6 +13,9 @@ export default defineNuxtConfig({
     },
   },
   devtools: { enabled: true },
+  nitro: {
+    preset: 'vercel',
+  },
   modules: ['@nuxt/eslint', '@nuxt/icon', '@pinia/nuxt'],
   css: ['~/assets/css/tailwind.css'],
   app: {
