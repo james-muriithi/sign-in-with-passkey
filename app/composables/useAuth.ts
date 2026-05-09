@@ -73,6 +73,7 @@ export const useAuth = () => {
         body: { response, passkeyName },
       });
     } catch (e: unknown) {
+      console.error("Passkey setup failed", e);
       error.value =
         (e as { data?: { message?: string } })?.data?.message ??
         "Passkey setup failed";

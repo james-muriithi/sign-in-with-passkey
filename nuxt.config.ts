@@ -8,7 +8,7 @@ export default defineNuxtConfig({
     sessionSecret: process.env.SESSION_SECRET ?? 'change-me-in-production-use-a-long-random-string',
     webauthn: {
       rpName: process.env.WEBAUTHN_RP_NAME ?? 'My App',
-      rpId: process.env.WEBAUTHN_RP_ID ?? 'localhost',
+      rpId: process.env.WEBAUTHN_RP_ID ?? (process.env.VERCEL_URL ? process.env.VERCEL_URL : 'localhost'),
       origin: process.env.WEBAUTHN_ORIGIN ?? (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000'),
     },
   },
