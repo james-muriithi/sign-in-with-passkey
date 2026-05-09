@@ -1,12 +1,11 @@
-import type { User } from "~/generated/prisma/client"
+import type { UserProfile } from "~~/server/api/auth/profile.get"
 
-type AuthUser = Pick<User, 'id' | 'email' | 'name'>
 
 export const useAuthStore = defineStore('auth', () => {
-  const user = ref<AuthUser | null>(null)
+  const user = ref<UserProfile | null>(null)
   const isAuthenticated = computed(() => user.value !== null)
 
-  const setUser = (u: AuthUser) => {
+  const setUser = (u: UserProfile) => {
     user.value = u
   }
 
