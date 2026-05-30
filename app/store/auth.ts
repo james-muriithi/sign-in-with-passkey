@@ -1,17 +1,17 @@
-export const useAuthStore = defineStore("auth", () => {
-  const isAuthenticated = ref(false);
+import type { UserProfile } from "~~/server/api/auth/profile.get"
 
-  function login() {
-    isAuthenticated.value = true;
+
+export const useAuthStore = defineStore('auth', () => {
+  const user = ref<UserProfile | null>(null)
+  const isAuthenticated = computed(() => user.value !== null)
+
+  const setUser = (u: UserProfile) => {
+    user.value = u
   }
 
-  function logout() {
-    isAuthenticated.value = false;
+  const clearUser = () => {
+    user.value = null
   }
 
-  return {
-    isAuthenticated,
-    login,
-    logout,
-  };
-});
+  return { user, isAuthenticated, setUser, clearUser }
+})

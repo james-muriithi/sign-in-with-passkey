@@ -1,5 +1,5 @@
 @import "tailwindcss";
-/* @import "@nuxt/ui"; */
+@import "@nuxt/ui";
 
 @theme {
   --color-base: rgb(var(--cb-bg));

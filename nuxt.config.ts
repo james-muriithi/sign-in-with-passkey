@@ -4,11 +4,19 @@ import tailwindcss from "@tailwindcss/vite";
 
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
+  runtimeConfig: {
+    sessionSecret: process.env.SESSION_SECRET ?? 'change-me-in-production-use-a-long-random-string',
+    webauthn: {
+      rpName: process.env.WEBAUTHN_RP_NAME ?? 'My App',
+      rpId: process.env.WEBAUTHN_RP_ID ?? (process.env.VERCEL_BRANCH_URL ? process.env.VERCEL_BRANCH_URL : 'localhost'),
+      origin: process.env.WEBAUTHN_ORIGIN ?? (process.env.VERCEL_BRANCH_URL ? `https://${process.env.VERCEL_BRANCH_URL}` : 'http://localhost:3000'),
+    },
+  },
   devtools: { enabled: true },
   nitro: {
     preset: 'vercel',
   },
-  modules: ['@nuxt/eslint', '@nuxt/icon', '@pinia/nuxt'],
+  modules: ['@nuxt/eslint', '@nuxt/icon', '@pinia/nuxt', '@nuxt/ui'],
   css: ['~/assets/css/tailwind.css'],
   app: {
     head: {
